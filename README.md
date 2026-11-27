@@ -1,15 +1,71 @@
-# 🧰 ToolShelf
+# ToolShelf
 
-One home for every tool in the **Useful Web Tools** series. Visitors browse, search, and open tools; you add a new one by editing a single file.
+A single home for the **Useful Web Tools** series: free online tools for PDFs, images and files. No ads, no sign-ups, and most tools run entirely in your browser.
 
-React + Vite + Tailwind + React Router. No backend, no database.
+**Live site:** _add your Vercel URL here_
 
-## Add a new tool (30 seconds)
+---
 
-1. Open `src/data/tools.js`
-2. Copy any object in the `tools` array and paste it at the **top** (newest first)
-3. Change `slug`, `name`, `tagline`, `description`, `url`, `features`
-4. `git push` — Vercel redeploys automatically
+## Tools
+
+| Tool | What it does | Privacy |
+| --- | --- | --- |
+| [QuickDrop](https://quickdrop-woad.vercel.app/) | Send text or files to any device with a 4-digit code | Temporary upload |
+| [QR Generator](https://qrgenerator-indol-chi.vercel.app/) | Turn any link or text into a QR code | In your browser |
+| [PDF Merger](https://pdfmerger-snowy.vercel.app/) | Combine multiple PDFs into one file | In your browser |
+| [Image Compressor](https://image-compressor-blond-two.vercel.app/) | Shrink images to an exact size, like under 50 KB | In your browser |
+| [Image to PDF](https://image-to-pdf-gray.vercel.app/) | Turn any image format into one clean PDF | In your browser |
+| [PDF Splitter](https://pdf-splitter-pied.vercel.app/) | Pick the pages you need and download a new PDF | In your browser |
+
+Each tool is its own app with its own URL. ToolShelf is the directory that links them together.
+
+## Features
+
+- Search with `Ctrl/Cmd + K` or `/` from any page
+- Category filters; search and filters live in the URL, so results are shareable
+- A page for every tool with highlights, a privacy note, a Share button and an optional "Try it here" preview
+- Dark and light mode, remembered between visits
+- Privacy label on every tool: runs in your browser, or uses temporary upload
+- `sitemap.xml` and `robots.txt` generated automatically on every build
+- The tool list is validated before each build, so a typo can't break the site
+
+## Tech stack
+
+- [React](https://react.dev/) 18
+- [Vite](https://vite.dev/)
+- [Tailwind CSS](https://tailwindcss.com/) 3
+- [React Router](https://reactrouter.com/) 7
+- [lucide-react](https://lucide.dev/) icons
+
+No backend and no database.
+
+## Getting started
+
+```bash
+git clone https://github.com/<your-username>/toolshelf.git
+cd toolshelf
+npm install
+npm run dev
+```
+
+Open the local URL that Vite prints (usually `http://localhost:5173`).
+
+### Build for production
+
+```bash
+npm run build
+```
+
+The build validates the tool list, regenerates the sitemap, and outputs to `dist/`.
+
+## Adding a new tool
+
+Every tool is one object in `src/data/tools.js`. That is the only file you need to edit.
+
+1. Open `src/data/tools.js`.
+2. Copy an existing object and paste it at the top of the `tools` array (newest first).
+3. Change the fields.
+4. Push to GitHub. Vercel redeploys automatically.
 
 ```js
 {
@@ -22,58 +78,55 @@ React + Vite + Tailwind + React Router. No backend, no database.
   url: 'https://my-new-tool.vercel.app/',
   status: 'live',                 // 'live' | 'soon'
   privacy: 'local',               // 'local' | 'server'
-  week: 6,                        // optional
-  addedAt: '2026-12-01',          // optional: shows a "New" badge for 14 days
+  week: 6,                        // optional: shows a "Week 6" label
+  addedAt: '2026-12-01',          // optional: shows a "New" label for 14 days
   features: ['Does this', 'And that'],
   tags: ['extra', 'search', 'words'],
 }
 ```
 
-- **Teasing a future tool?** Use `status: 'soon'` and `url: ''`. It shows as a greyed "Coming soon" card.
-- **Need a new category?** Add it to `CATEGORIES` in `tools.js`.
-- **Need a new icon?** Import it from `lucide-react` in `src/lib/icons.js` and add it to `ICONS`.
-- **Made a typo?** `npm run build` validates the file and fails with a clear message instead of shipping a broken site (run `npm run validate` any time).
-
-## Run locally
-
-```bash
-npm install
-npm run dev
-```
+- **Announcing a tool early:** use `status: 'soon'` and `url: ''`. It appears as a greyed-out "Coming soon" card.
+- **New category:** add it to `CATEGORIES` in `src/data/tools.js`.
+- **New icon:** import it from `lucide-react` in `src/lib/icons.js` and add it to `ICONS`.
+- **Check your changes:** run `npm run validate`. It reports any mistake in plain language.
 
 ## Deploy on Vercel
 
-1. Push this folder to a GitHub repo
-2. Import it at [vercel.com/new](https://vercel.com/new). Vite is auto-detected (build `npm run build`, output `dist`)
-3. Add an environment variable `SITE_URL` = your final domain (e.g. `https://toolshelf.vercel.app`) so the sitemap has the right URLs
-4. Deploy
+1. Push the repo to GitHub.
+2. Import it at [vercel.com/new](https://vercel.com/new). Vite is detected automatically (build command `npm run build`, output directory `dist`).
+3. Add an environment variable `SITE_URL` set to your final domain, for example `https://toolshelf.vercel.app`. It is used for the sitemap.
+4. Click **Deploy**.
 
-`vercel.json` already contains the rewrite that makes direct links like `/tools/quickdrop` work.
+`vercel.json` already includes the rewrite that makes direct links such as `/tools/quickdrop` work.
 
-## What's inside
-
-- **Home**: hero, search (`Ctrl/⌘ K` or `/` from anywhere), category filters, tool grid, "coming soon" section. Search and filter live in the URL (`/?q=pdf&c=PDF`) so results are shareable
-- **Tool page** (`/tools/:slug`): description, highlights, honest privacy note, Launch button, Share, and a lazy-loaded "Try it here" preview
-- **Dark / light mode**, remembered between visits, no flash on load
-- **Privacy badges**: "Runs in your browser" vs "Temporary upload"
-- `sitemap.xml` and `robots.txt` are generated from the registry on every build
-
-## Good to know
-
-- It's a client-rendered React app. Google does render JavaScript, but if SEO becomes a priority later, pre-rendering the tool pages is the upgrade path.
-- "Try it here" embeds the tool in an iframe. If you ever add `X-Frame-Options` headers to a tool, its preview will be blocked; the Launch button still works.
-- Each tool keeps its own deployment and URL. ToolShelf only links to them.
-
-## Structure
+## Project structure
 
 ```
-src/
-├── data/tools.js        ← the only file you edit regularly
-├── data/site.js         ← name, tagline, LinkedIn link
-├── lib/icons.js         ← icon registry
-├── components/          ← Header, Footer, ToolCard, SearchBar, Badges
-├── pages/               ← Home, ToolPage, NotFound
-scripts/
-├── validate-tools.mjs   ← runs before every build
-└── generate-sitemap.mjs ← runs before every build
+toolshelf/
+├── public/
+│   └── favicon.svg
+├── scripts/
+│   ├── validate-tools.mjs     # checks tools.js before every build
+│   └── generate-sitemap.mjs   # writes sitemap.xml and robots.txt
+├── src/
+│   ├── components/            # Header, Footer, ToolCard, SearchBar, Badges
+│   ├── data/
+│   │   ├── tools.js           # the tool list (edit this)
+│   │   └── site.js            # site name and links
+│   ├── lib/                   # icons, theme, helpers
+│   ├── pages/                 # Home, ToolPage, NotFound
+│   ├── App.jsx
+│   └── main.jsx
+├── index.html
+├── vercel.json
+└── package.json
 ```
+
+## Notes
+
+- ToolShelf is a client-rendered React app. Search engines can render it, but if SEO becomes a priority, pre-rendering the tool pages is the next step.
+- "Try it here" embeds a tool in an iframe. If a tool ever blocks being embedded (the `X-Frame-Options` header), the preview will be empty. The Launch button still works.
+
+## Author
+
+Built by **Prashanth Goud** · [LinkedIn](https://www.linkedin.com/in/prashanth-goud-372485294/)
